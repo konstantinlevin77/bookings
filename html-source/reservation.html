@@ -8,6 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker-bs5.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
+
 
     <style>
         .my-footer {
@@ -80,39 +84,25 @@
 
                 <h1 class="mt-5"> Search for availability!</h1>
 
-                <form action="reservation.html" method="GET">
+                <form action="reservation.html" method="GET" novalidate class="needs-validation">
 
 
-                    <div class="row">
-
-                        <div class="col">
-
-                            <div class="form-group">
-
-                                <label for="start_date">Starting Date</label>
-                                <input required type="date" class="form-control" id="start_date" name="start_date"
-                                    aria-describedby="startDateHelp">
-                                <small id="startDateHelp" class="form-text text-muted">Enter your starting date in the
-                                    form of
-                                    YYYY-MM-DD</small>
-                            </div>
-
-                        </div>
+                    <div class="row mb-3">
 
                         <div class="col">
 
-                            <div class="form-group">
-
-                                <label for="end_date">Ending Date</label>
-                                <input required type="date" class="form-control" id="end_date" name="end_date"
-                                    aria-describedby="endDateHelp">
-                                <small id="endDateHelp" class="form-text text-muted">Enter your Ending date in the form
-                                    of
-                                    YYYY-MM-DD</small>
-
+                            <div class="row" id="reservation-dates">
+                                <div class="col">
+                                    <input required name="start" placeholder="Arrival date" type="text" class="form-control">
+                                </div>
+                                <div class="col">
+                                    <input required name="end" placeholder="Departure date" type="text" class="form-control">
+                                </div>
                             </div>
 
+
                         </div>
+
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -133,9 +123,42 @@
         </div>
     </div>
 
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
+
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (() => {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+
+        const elem = document.getElementById('reservation-dates');
+        const rangepicker = new DateRangePicker(elem, {
+            format:"yyyy-mm-dd"
+        });
+
+
+
+    </script>
+
 </body>
 
 </html>
