@@ -10,7 +10,10 @@
 
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker-bs5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
+    <script src="https://unpkg.com/notie"></script>
 
 
     <style>
@@ -93,10 +96,12 @@
 
                             <div class="row" id="reservation-dates">
                                 <div class="col">
-                                    <input required name="start" placeholder="Arrival date" type="text" class="form-control">
+                                    <input required name="start" placeholder="Arrival date" type="text"
+                                        class="form-control">
                                 </div>
                                 <div class="col">
-                                    <input required name="end" placeholder="Departure date" type="text" class="form-control">
+                                    <input required name="end" placeholder="Departure date" type="text"
+                                        class="form-control">
                                 </div>
                             </div>
 
@@ -111,6 +116,10 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="text-center">
+        <button id="notieTestButton" class="btn btn-primary btn-success">Click me to see an alert!</button>
     </div>
 
     <div class="my-footer text-center">
@@ -152,9 +161,22 @@
 
         const elem = document.getElementById('reservation-dates');
         const rangepicker = new DateRangePicker(elem, {
-            format:"yyyy-mm-dd"
+            format: "yyyy-mm-dd"
         });
 
+
+        function notify(msg, msgType) {
+            notie.alert({
+                type: msgType,
+                text: msg,
+            })
+        }
+
+        let notieButton = document.getElementById("notieTestButton")
+        
+        notieButton.addEventListener("click", () => {
+            notify("You did it, cool stuff bro!","success")
+        })
 
 
     </script>
