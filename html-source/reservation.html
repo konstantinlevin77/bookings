@@ -142,6 +142,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+
+
         // Example starter JavaScript for disabling form submissions if there are invalid fields
         (() => {
             'use strict'
@@ -175,7 +177,7 @@
             })
         }
 
-        function notifyModal(title,text,icon,confirmButtonText) {
+        function notifyModal(title, text, icon, confirmButtonText) {
             Swal.fire({
                 title: title,
                 text: text,
@@ -184,22 +186,102 @@
             })
         }
 
+        function promptModule() {
+
+            function toast(c) {
+
+                const {
+
+                    msg = "",
+                    icon = "success",
+                    position = "top-start"
+
+                } = c;
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    title: msg,
+                    position: position,
+                    icon: icon,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+
+                        toast.addEventListener("mouseenter", Swal.stopTimer),
+                            toast.addEventListener("mouseleave", Swal.resumeTimer)
+
+                    }
+                })
+
+                Toast.fire({})
+
+            }
+
+            function successModal(c) {
+
+                const {
+
+                    msg = "",
+                    title = "",
+                    footer = ""
+
+                } = c;
+
+                Swal.fire({
+                    icon: "success",
+                    text: msg,
+                    title: title,
+                    footer: footer
+
+                })
+            }
+
+            function errorModal(c) {
+
+                const {
+
+                    msg = "",
+                    title = "",
+                    footer = ""
+
+                } = c;
+
+                Swal.fire({
+                    icon: "error",
+                    text: msg,
+                    title: title,
+                    footer: footer
+                })
+
+            }
+
+            return {
+                toast: toast,
+                successModal: successModal,
+                errorModal:errorModal
+            }
+        }
+
+
+        const prompter = promptModule()
+
+
+
         let notieButton = document.getElementById("notieTestButton")
 
         notieButton.addEventListener("click", () => {
-            notify("You did it, cool stuff bro!", "success")
+            //notify("You did it, cool stuff bro!", "success")
+            prompter.toast({ msg: "Toast function of promptModule" })
         })
 
         let modalButton = document.getElementById("modalTestButton")
         modalButton.addEventListener("click", () => {
-            notifyModal("Cool!","Wish I was a cow in Norway","success","No way.")
+            //prompter.successModal({ msg: "Wish I was a cow in Norway." })
+            prompter.errorModal({msg:"Unfortunately I'm not."})
         })
 
     </script>
-
-
-
-
 
 
 </body>
