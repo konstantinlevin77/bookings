@@ -26,7 +26,14 @@
 
         .room-image {
             max-width: 50%;
+
         }
+
+        .datepicker {
+            z-index: 100000;
+        }
+
+
     </style>
 
 </head>
@@ -256,29 +263,83 @@
 
             }
 
+            async function customModal(c) {
+
+                const {
+                    msg = "",
+                    title = "",
+                } = c;
+
+                const { value: formValues } = await Swal.fire({
+                    title: title,
+                    html: msg,
+                    focusConfirm: false,
+                    showCancelButton:true,
+                    didOpen: () => {
+                        document.getElementById("start").removeAttribute("disabled")
+                        document.getElementById("end").removeAttribute("disabled")
+                    },
+                    willOpen: () => {
+                        const elem = document.getElementById("reservation-dates-modal");
+                        const rp = new DateRangePicker(elem,{
+                            format:"yyyy-mm-dd",
+                            showOnFocus:"true"
+                        });
+                    },
+                    preConfirm: () => {
+                        return [
+                            document.getElementById("start").value,
+                            document.getElementById("end").value
+                        ];
+                    }
+                });
+                if (formValues) {
+                    Swal.fire(JSON.stringify(formValues));
+                }
+            }
+
             return {
                 toast: toast,
                 successModal: successModal,
-                errorModal:errorModal
+                errorModal: errorModal,
+                customModal:customModal,
             }
         }
 
 
         const prompter = promptModule()
 
-
-
         let notieButton = document.getElementById("notieTestButton")
 
         notieButton.addEventListener("click", () => {
             //notify("You did it, cool stuff bro!", "success")
-            prompter.toast({ msg: "Toast function of promptModule" })
+
+            let html = `
+                        <form id="check-availability-form" action="" novalidate method="post" class="need-validation">
+                <div class="row">
+                    <div class="col">
+                        <div class="row" id="reservation-dates-modal">
+
+                            <div class="col">
+                                <input disabled type="text" name="start" id="start" placeholder="Arrival" class="form-control">
+                            </div>
+                            <div class="col"">
+                                <input disabled type="text" name="end" id="end" placeholder="Departure" class="form-control">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+            `
+
+            prompter.customModal({msg:html,title:"Check Availability"})
         })
 
         let modalButton = document.getElementById("modalTestButton")
         modalButton.addEventListener("click", () => {
             //prompter.successModal({ msg: "Wish I was a cow in Norway." })
-            prompter.errorModal({msg:"Unfortunately I'm not."})
+            prompter.errorModal({ msg: "Unfortunately I'm not." })
         })
 
     </script>
