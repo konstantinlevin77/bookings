@@ -4,22 +4,9 @@
 <div class="container">
     <div class="row">
         <div class="column">
-            <h1>This is the about page</h1>
 
-            <p>This came from the template: {{index .StringMap "test"}}</p>
+            <h1>This is the about page.</h1>
 
-
-            <p>
-                {{if ne (index .StringMap "remote_ip") ""}}
-
-                    Your remote IP address is {{index .StringMap "remote_ip"}}
-                {{else}}
-                    I don't know your ip address as you've never visited the home page. Go see it pal.
-                {{end}}
-
-            </p>
-            
-            <img src="/static/image/house.jpg" width="1200" height="630">
 
         </div>
     </div>

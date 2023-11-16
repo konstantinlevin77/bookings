@@ -49,3 +49,32 @@ func (m *Repository) AboutHandler(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, "about.page.html", &models.TemplateData{StringMap: stringMap})
 
 }
+
+func (m *Repository) GeneralsHandler(w http.ResponseWriter, r *http.Request) {
+
+	render.RenderTemplate(w, "generals.page.html", &models.TemplateData{})
+
+}
+
+func (m *Repository) MajorsHandler(w http.ResponseWriter, r *http.Request) {
+
+	render.RenderTemplate(w, "majors.page.html", &models.TemplateData{})
+}
+
+func (m *Repository) SearchAvailabilityHandler(w http.ResponseWriter, r *http.Request) {
+
+	render.RenderTemplate(w, "search-availability.page.html", &models.TemplateData{})
+
+}
+
+func (m *Repository) ContactHandler(w http.ResponseWriter, r *http.Request) {
+
+	render.RenderTemplate(w, "contact.page.html", &models.TemplateData{})
+
+}
+
+func (m *Repository) ReservationHandler(w http.ResponseWriter, r *http.Request) {
+
+	render.RenderTemplate(w, "make-reservation.page.html", &models.TemplateData{})
+
+}

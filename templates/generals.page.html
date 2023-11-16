@@ -1,0 +1,72 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col">
+                <img src="/static/images/generals-quarters.png" class="img-fluid img-thumbnail room-image mx-auto d-block" alt="room image">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center mt-4">
+                    General's Quarters
+                </h1>
+                <p class="text-center">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illo autem molestias adipisci laboriosam
+                    temporibus corrupti, quasi quaerat? Doloremque nam officia aut, esse maiores saepe tempore
+                    consequatur cum, odio, expedita tempora. Repudiandae explicabo, quam similique ad dolore maiores
+                    officia reiciendis sit.
+                </p>
+            </div>
+            <div class="row">
+                <a id="check-availability-button" href="#!" class="btn btn-primary btn-sm">Check Availability!</a>
+            </div>
+        </div>
+
+    </div>
+
+{{end}}
+
+
+{{define "js"}}
+
+    <script>
+
+        let prompter = promptModule();
+
+
+
+        let availabilityButton = document.getElementById("check-availability-button");
+
+        availabilityButton.addEventListener("click", () => {
+
+            //notify("You did it, cool stuff bro!", "success")
+
+            let html = `
+    <form id="check-availability-form" action="" novalidate method="post" class="need-validation">
+        <div class="row">
+            <div class="col">
+                <div class="row" id="reservation-dates-modal">
+
+                    <div class="col">
+                        <input disabled type="text" name="start" id="start" placeholder="Arrival" class="form-control">
+                    </div>
+                    <div class="col">
+                         <input disabled type="text" name="end" id="end" placeholder="Departure" class="form-control">
+                    </div>
+
+                </div>
+            </div>
+            </div>
+        </form>
+        `
+
+            prompter.customModal({msg:html,title:"Check Availability"})
+        })
+    </script>
+
+{{end}}

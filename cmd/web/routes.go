@@ -19,6 +19,11 @@ func routes(app *config.AppConfig) http.Handler {
 
 	mux.Get("/", handlers.Repo.HomeHandler)
 	mux.Get("/about", handlers.Repo.AboutHandler)
+	mux.Get("/generals-quarters", handlers.Repo.GeneralsHandler)
+	mux.Get("/majors-suite", handlers.Repo.MajorsHandler)
+	mux.Get("/search-availability", handlers.Repo.SearchAvailabilityHandler)
+	mux.Get("/contact", handlers.Repo.ContactHandler)
+	mux.Get("/make-reservation", handlers.Repo.ReservationHandler)
 
 	// File server returns a http handler which serves the content of the specified root.
 
