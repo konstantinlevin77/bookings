@@ -65,7 +65,41 @@
         </form>
         `
 
-            prompter.customModal({msg:html,title:"Check Availability"})
+            prompter.customModal({
+                msg:html,
+                title:"Check Availability",
+
+                didOpen: () => {
+                    document.getElementById("start").removeAttribute("disabled")
+                    document.getElementById("end").removeAttribute("disabled")
+                },
+
+                willOpen: () => {
+                    const elem = document.getElementById("reservation-dates-modal");
+                    const rp = new DateRangePicker(elem,{
+                        format:"yyyy-mm-dd",
+                        showOnFocus:"true"
+                    });
+                },
+
+
+                callback: (result) => {
+
+                    let form = document.getElementById("check-availability-form");
+                    let formData = new FormData(form);
+                    formData.append("csrf_token","{{.CSRFToken}}");
+
+
+                    fetch("/search-availability-json", {
+                        method:"post",
+                        body:formData
+                    }).then
+                    (response => response.json()).then
+                    (data => {
+                        console.log(data);
+                    })
+                }
+            })
         })
     </script>
 

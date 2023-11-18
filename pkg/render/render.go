@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"github.com/justinas/nosurf"
 	"html/template"
 	"log"
 	"net/http"
@@ -17,15 +18,14 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
 
-	// if something needs to be default, we can add it here.
-	// for now, there's no default data, so it just returns
-	// as it is.
+	td.CSRFToken = nosurf.Token(r)
+
 	return td
 }
 
-func RenderTemplate(w http.ResponseWriter, t string, td *models.TemplateData) {
+func RenderTemplate(w http.ResponseWriter, r *http.Request, t string, td *models.TemplateData) {
 
 	var tc map[string]*template.Template
 
@@ -45,12 +45,14 @@ func RenderTemplate(w http.ResponseWriter, t string, td *models.TemplateData) {
 
 	// call it here
 
-	td = AddDefaultData(td)
+	td = AddDefaultData(td, r)
 
 	err := tmpl.Execute(buf, td)
 
 	if err != nil {
+		log.Println(err)
 		log.Fatal("Error occurred while writing to buffer, aborting.")
+
 	}
 
 	// The first return value is number of bytes written.

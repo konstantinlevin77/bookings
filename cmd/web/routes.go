@@ -25,6 +25,10 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/contact", handlers.Repo.ContactHandler)
 	mux.Get("/make-reservation", handlers.Repo.ReservationHandler)
 
+	mux.Post("/search-availability", handlers.Repo.PostSearchAvailabilityHandler)
+
+	mux.Post("/search-availability-json", handlers.Repo.SearchAvailabilityJSONHandler)
+
 	// File server returns a http handler which serves the content of the specified root.
 
 	fileServer := http.FileServer(http.Dir("./static/"))

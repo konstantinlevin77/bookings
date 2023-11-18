@@ -11,7 +11,10 @@
 
             <h1 class="mt-5"> Search for availability!</h1>
 
-            <form action="" method="GET" novalidate class="needs-validation">
+            <form action="/search-availability" method="post" novalidate class="needs-validation">
+
+
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
 
                 <div class="row mb-3">
