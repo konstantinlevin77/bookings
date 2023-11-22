@@ -1,14 +1,14 @@
 package main
 
 import (
+	"github.com/konstantinlevin77/bookings/internal/config"
+	"github.com/konstantinlevin77/bookings/internal/handlers"
+	"github.com/konstantinlevin77/bookings/internal/render"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/konstantinlevin77/bookings/pkg/config"
-	"github.com/konstantinlevin77/bookings/pkg/handlers"
-	"github.com/konstantinlevin77/bookings/pkg/render"
 )
 
 const PORT = ":8080"

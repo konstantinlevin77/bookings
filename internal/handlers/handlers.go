@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
+	"github.com/konstantinlevin77/bookings/internal/config"
+	"github.com/konstantinlevin77/bookings/internal/forms"
+	"github.com/konstantinlevin77/bookings/internal/models"
+	"github.com/konstantinlevin77/bookings/internal/render"
 	"log"
 	"net/http"
-
-	"github.com/konstantinlevin77/bookings/pkg/config"
-	"github.com/konstantinlevin77/bookings/pkg/models"
-	"github.com/konstantinlevin77/bookings/pkg/render"
 )
 
 var Repo *Repository
@@ -77,7 +77,51 @@ func (m *Repository) ContactHandler(w http.ResponseWriter, r *http.Request) {
 
 func (m *Repository) ReservationHandler(w http.ResponseWriter, r *http.Request) {
 
-	render.RenderTemplate(w, r, "make-reservation.page.html", &models.TemplateData{})
+	var emptyReservation models.Reservation
+	data := make(map[string]interface{})
+
+	data["reservation"] = emptyReservation
+
+	render.RenderTemplate(w, r, "make-reservation.page.html", &models.TemplateData{
+		Form: forms.NewForm(nil),
+		Data: data,
+	})
+
+}
+
+func (m *Repository) PostReservationHandler(w http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseForm()
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	reservation := models.Reservation{
+		FirstName: r.Form.Get("first_name"),
+		LastName:  r.Form.Get("last_name"),
+		Email:     r.Form.Get("email"),
+		Phone:     r.Form.Get("phone"),
+	}
+
+	form := forms.NewForm(r.PostForm)
+
+	//form.Has("first_name", r)
+
+	form.Required("first_name", "last_name", "email")
+	form.MinLength("first_name", 3, r)
+	form.IsEmail("email")
+
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["reservation"] = reservation
+
+		render.RenderTemplate(w, r, "make-reservation.page.html", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+	}
 
 }
 

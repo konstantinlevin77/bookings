@@ -3,13 +3,12 @@ package render
 import (
 	"bytes"
 	"github.com/justinas/nosurf"
+	"github.com/konstantinlevin77/bookings/internal/config"
+	"github.com/konstantinlevin77/bookings/internal/models"
 	"html/template"
 	"log"
 	"net/http"
 	"path/filepath"
-
-	"github.com/konstantinlevin77/bookings/pkg/config"
-	"github.com/konstantinlevin77/bookings/pkg/models"
 )
 
 var app *config.AppConfig
