@@ -1,16 +1,16 @@
 package config
 
 import (
-	"html/template"
 	"github.com/alexedwards/scs/v2"
+	"html/template"
+	"log"
 )
 
 type AppConfig struct {
-
-
-	UseCache bool
+	UseCache      bool
 	TemplateCache map[string]*template.Template
-	InProduction bool
-	Session *scs.SessionManager
-
+	InProduction  bool
+	Session       *scs.SessionManager
+	InfoLogger    *log.Logger
+	ErrorLogger   *log.Logger
 }
