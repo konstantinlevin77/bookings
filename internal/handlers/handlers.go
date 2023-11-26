@@ -29,8 +29,6 @@ func NewHandlers(r *Repository) {
 
 func (m *Repository) HomeHandler(w http.ResponseWriter, r *http.Request) {
 
-	remoteIP := r.RemoteAddr
-	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 	render.RenderTemplate(w, r, "home.page.html", &models.TemplateData{})
 
 }
@@ -121,7 +119,12 @@ func (m *Repository) PostReservationHandler(w http.ResponseWriter, r *http.Reque
 			Form: form,
 			Data: data,
 		})
+		return
 	}
+
+	m.App.Session.Put(r.Context(), "reservation", reservation)
+
+	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 
 }
 
@@ -149,5 +152,27 @@ func (m *Repository) SearchAvailabilityJSONHandler(w http.ResponseWriter, r *htt
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(out)
+
+}
+
+func (m *Repository) ReservationSummaryHandler(w http.ResponseWriter, r *http.Request) {
+
+	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
+
+	if !ok {
+		log.Println("Couldn't get reservation from session")
+		m.App.Session.Put(r.Context(), "error", "Can't get reservation from session")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
+	m.App.Session.Remove(r.Context(), "reservation")
+
+	data := make(map[string]interface{})
+	data["reservation"] = reservation
+
+	render.RenderTemplate(w, r, "reservation-summary.page.html", &models.TemplateData{
+		Data: data,
+	})
 
 }

@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/gob"
 	"github.com/konstantinlevin77/bookings/internal/config"
 	"github.com/konstantinlevin77/bookings/internal/handlers"
+	"github.com/konstantinlevin77/bookings/internal/models"
 	"github.com/konstantinlevin77/bookings/internal/render"
 	"log"
 	"net/http"
@@ -17,6 +19,31 @@ var app config.AppConfig
 var session *scs.SessionManager
 
 func main() {
+
+	err := run()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//http.HandleFunc("/", handlers.Repo.HomeHandler)
+	//http.HandleFunc("/about",handlers.Repo.AboutHandler)
+
+	log.Println("Listening and serving on ", PORT)
+	server := &http.Server{
+		Addr:    PORT,
+		Handler: routes(&app),
+	}
+
+	err = server.ListenAndServe()
+	log.Fatal(err.Error())
+
+	//http.ListenAndServe(PORT,nil)
+
+}
+
+func run() error {
+
+	gob.Register(models.Reservation{})
 
 	// set it to true when production
 	app.InProduction = false
@@ -34,6 +61,7 @@ func main() {
 	if err != nil {
 		log.Println("Error occurred while creating template cache, aborting.")
 		log.Fatal(err.Error())
+		return err
 	}
 
 	app.TemplateCache = tc
@@ -44,18 +72,5 @@ func main() {
 
 	render.NewTemplates(&app)
 
-	//http.HandleFunc("/", handlers.Repo.HomeHandler)
-	//http.HandleFunc("/about",handlers.Repo.AboutHandler)
-
-	log.Println("Listening and serving on ", PORT)
-	server := &http.Server{
-		Addr:    PORT,
-		Handler: routes(&app),
-	}
-
-	err = server.ListenAndServe()
-	log.Fatal(err.Error())
-
-	//http.ListenAndServe(PORT,nil)
-
+	return nil
 }
