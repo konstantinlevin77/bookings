@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"github.com/konstantinlevin77/bookings/helpers"
 	"github.com/konstantinlevin77/bookings/internal/config"
+	"github.com/konstantinlevin77/bookings/internal/driver"
 	"github.com/konstantinlevin77/bookings/internal/forms"
 	"github.com/konstantinlevin77/bookings/internal/models"
 	"github.com/konstantinlevin77/bookings/internal/render"
+	"github.com/konstantinlevin77/bookings/internal/repository"
+	"github.com/konstantinlevin77/bookings/internal/repository/dbrepo"
 	"log"
 	"net/http"
 )
@@ -15,11 +18,13 @@ var Repo *Repository
 
 type Repository struct {
 	App *config.AppConfig
+	DB  repository.DatabaseRepo
 }
 
-func NewRepository(a *config.AppConfig) *Repository {
+func NewRepository(a *config.AppConfig, db *driver.DB) *Repository {
 	return &Repository{
 		App: a,
+		DB:  dbrepo.NewPostgresRepo(db.SQL, a),
 	}
 }
 

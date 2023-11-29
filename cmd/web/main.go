@@ -4,6 +4,7 @@ import (
 	"encoding/gob"
 	"github.com/konstantinlevin77/bookings/helpers"
 	"github.com/konstantinlevin77/bookings/internal/config"
+	"github.com/konstantinlevin77/bookings/internal/driver"
 	"github.com/konstantinlevin77/bookings/internal/handlers"
 	"github.com/konstantinlevin77/bookings/internal/models"
 	"github.com/konstantinlevin77/bookings/internal/render"
@@ -13,6 +14,7 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 const PORT = ":8080"
@@ -24,10 +26,11 @@ var errorLogger *log.Logger
 
 func main() {
 
-	err := run()
+	db, err := run()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.SQL.Close()
 
 	//http.HandleFunc("/", handlers.Repo.HomeHandler)
 	//http.HandleFunc("/about",handlers.Repo.AboutHandler)
@@ -45,7 +48,7 @@ func main() {
 
 }
 
-func run() error {
+func run() (*driver.DB, error) {
 
 	gob.Register(models.Reservation{})
 
@@ -66,21 +69,30 @@ func run() error {
 	errorLogger = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 	app.ErrorLogger = errorLogger
 
+	log.Println("Connecting to the database...")
+	db, err := driver.NewDB("host=localhost port=5432 dbname=bookings user=mehmettekman password=")
+	if err != nil {
+		log.Println(err)
+		log.Fatal("Couldn't connect to database, aborting...")
+
+	}
+	log.Println("Connected to the database!")
+
 	tc, err := render.CreateTemplateCache()
 
 	if err != nil {
 		log.Println("Error occurred while creating template cache, aborting.")
 		log.Fatal(err.Error())
-		return err
+		return nil, err
 	}
 
 	app.TemplateCache = tc
 	app.UseCache = false
 
-	repo := handlers.NewRepository(&app)
+	repo := handlers.NewRepository(&app, db)
 	handlers.NewHandlers(repo)
 	render.NewTemplates(&app)
 	helpers.NewHelpers(&app)
 
-	return nil
+	return db, nil
 }
