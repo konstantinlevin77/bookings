@@ -17,6 +17,7 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
+// AddDefaultData adds default data to the given models.TemplateData.
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
 
 	td.Flash = app.Session.PopString(r.Context(), "flash")
@@ -27,7 +28,9 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 	return td
 }
 
-func RenderTemplate(w http.ResponseWriter, r *http.Request, t string, td *models.TemplateData) {
+// Template renders called template. In production, it's rendered directly from cache, in development
+// it's rendered from scratch.
+func Template(w http.ResponseWriter, r *http.Request, t string, td *models.TemplateData) {
 
 	var tc map[string]*template.Template
 
