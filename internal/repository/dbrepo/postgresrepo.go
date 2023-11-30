@@ -14,16 +14,18 @@ type postgresRepo struct {
 	DB  *sql.DB
 }
 
-func (pr *postgresRepo) InsertReservation(r models.Reservation) error {
+func (pr *postgresRepo) InsertReservation(r models.Reservation) (int, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
+	var newID int
+
 	var query string
 	query = `insert into reservations (first_name, last_name, email, phone, start_date,
-             end_date, room_id, created_at, updated_at) values   ($1,$2,$3,$4,$5,$6,$7,$8,$9)`
+             end_date, room_id, created_at, updated_at) values   ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning id`
 
-	_, err := pr.DB.ExecContext(ctx, query,
+	err := pr.DB.QueryRowContext(ctx, query,
 		r.FirstName,
 		r.LastName,
 		r.Email,
@@ -33,6 +35,28 @@ func (pr *postgresRepo) InsertReservation(r models.Reservation) error {
 		r.RoomID,
 		time.Now(),
 		time.Now(),
+	).Scan(&newID)
+
+	return newID, err
+}
+
+func (pr *postgresRepo) InsertRoomRestriction(r models.RoomRestriction) error {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `INSERT INTO room_restrictions (start_date, end_date, room_id, reservation_id,
+                               created_at, updated_at, restriction_id)
+                               VALUES ($1,$2,$3,$4,$5,$6,$7)`
+
+	_, err := pr.DB.ExecContext(ctx, stmt,
+		r.StartDate,
+		r.EndDate,
+		r.RoomID,
+		r.ReservationID,
+		time.Now(),
+		time.Now(),
+		r.RestrictionID,
 	)
 
 	return err
